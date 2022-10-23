@@ -1,0 +1,27 @@
+{
+  "name": "web-scrapper-backend",
+  "version": "1.0.0",
+  "description": "web-scrapper-backend",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/davesheinbein/web-scrapper-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/davesheinbein/web-scrapper-backend/issues"
+  },
+  "homepage": "https://github.com/davesheinbein/web-scrapper-backend#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "node": "^19.0.0",
+    "request": "^2.88.2"
+  }
+}
