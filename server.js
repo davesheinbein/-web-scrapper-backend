@@ -3,6 +3,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const app = express();
 const cors = require('cors');
+const port = 8081;
 
 app.use(
 	cors({
@@ -21,6 +22,6 @@ app.get('/scrape', function (req, res) {
 	});
 });
 
-app.listen('8081');
-console.log('on port 8081');
+app.listen(port);
+// console.log(`listening on port ${port}`);
 exports = module.exports = app;
