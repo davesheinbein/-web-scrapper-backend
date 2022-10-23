@@ -22,6 +22,6 @@ app.get('/scrape', function (req, res) {
 	});
 });
 
-app.listen(port);
+app.listen(port || '8081');
 // console.log(`listening on port ${port}`);
 exports = module.exports = app;
