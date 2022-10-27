@@ -21,53 +21,67 @@ app.get('/scrape', function (req, res) {
 		}
 		if (!!exampleUrl) {
 			console.log('Using sample Url');
-			// console.log('🚀 ~ html', html);
 			// console.log('🚀 ~ $.html', $.html);
-			// console.log(
-			// 	'🚀 ~ .section-player',
-			// 	$('.section-player')
-			// );
+			let rank = [];
+			let thumb = [];
+			let artist = [];
+			let baseTitle = [];
+			let remixLink = [];
+			let socialMedia = [];
+			let socialMediaLink = [];
 			$('.section-player').each((idx, el) => {
-				const item = $(el).text();
-				const rank = $(el).find('.rank').text();
-				// const track = $(el).find('.track_name').text();
-				const thumb = $(el).find('.thumb').attr('href');
+				rank.push({
+					value: $(el).find('.rank').text(),
+					id: idx,
+				});
+				thumb.push({
+					value: $(el).find('.thumb').attr('href'),
+					id: idx,
+				});
 				$(el)
 					.find('.track_name')
 					.each((idx, elm) => {
-						const artist = $(elm).find('.artist').text();
+						artist.push({
+							value: $(elm).find('.artist').text(),
+							id: idx,
+						});
 						$(elm)
 							.find('.track')
 							.each((idx, elme) => {
-								const baseTitle = $(elme)
-									.find('.base-title')
-									.text();
-								const remixLink = $(elme)
-									.find('.remix-link')
-									.text();
-								console.log('🚀 ~ remixLink', remixLink);
-								console.log('🚀 ~ baseTitle', baseTitle);
+								baseTitle.push({
+									value: $(elme).find('.base-title').text(),
+									id: idx,
+								});
+								remixLink.push({
+									value: $(elme).find('.remix-link').text(),
+									id: idx,
+								});
 							});
-						console.log('🚀 ~ artist', artist);
 					});
 				$(el)
 					.find('.meta')
 					.each((idx, elmen) => {
-						const socialMedia = $(elmen)
-							.find('.download > a')
-							.text();
-						const socialMediaLink = $(elmen)
-							.find('.download > a')
-							.attr('href');
-						console.log('🚀 ~ socialMedia', socialMedia);
-						console.log(
-							'🚀 ~ socialMediaLink',
-							socialMediaLink
-						);
+						socialMedia.push({
+							value: $(elmen).find('.download > a').text(),
+							id: idx,
+						});
+						socialMediaLink.push({
+							value: $(elmen)
+								.find('.download > a')
+								.attr('href'),
+							id: idx,
+						});
 					});
-				// console.log('🚀 ~ item', item);
 				console.log('🚀 ~ rank', rank);
 				console.log('🚀 ~ thumb', thumb);
+				console.log('🚀 ~ artist', artist);
+				console.log('🚀 ~ baseTitle', baseTitle);
+				console.log('🚀 ~ remixLink', remixLink);
+				console.log('🚀 ~ socialMedia', socialMedia);
+				console.log(
+					'🚀 ~ socialMediaLink',
+					socialMediaLink
+				);
 			});
 		}
 		res.send($.html());
