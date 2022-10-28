@@ -29,6 +29,31 @@ app.get('/scrape', function (req, res) {
 			let remixLink = [];
 			let socialMedia = [];
 			let socialMediaLink = [];
+			let headerLogo = [
+				{
+					title: $('#header')
+						.find('.logo-txt')
+						.attr('title'),
+					href: $('#header').find('.logo-txt').attr('href'),
+				},
+			];
+
+			console.log('Where am I', $('#header > .logo-txt '));
+			let hypeMachineData = {
+				html: $.html(),
+				rank,
+				thumb,
+				artist,
+				baseTitle,
+				remixLink,
+				socialMedia,
+				socialMediaLink,
+				headerLogo,
+			};
+
+			// let jsonOj = JSON.stringify(hypeMachineData);
+			// console.log('🚀 ~ jsonOj AAA', jsonOj);
+
 			$('.section-player').each((idx, el) => {
 				rank.push({
 					value: $(el).find('.rank').text(),
@@ -63,28 +88,29 @@ app.get('/scrape', function (req, res) {
 					.each((idx, elmen) => {
 						socialMedia.push({
 							value: $(elmen).find('.download > a').text(),
-							id: idx,
+							// id: idx,
 						});
 						socialMediaLink.push({
-							value: $(elmen)
-								.find('.download > a')
+								// // value: $(elmen)
+								// .find('.download > a')
 								.attr('href'),
-							id: idx,
+							// id: idx,
 						});
 					});
-				console.log('🚀 ~ rank', rank);
-				console.log('🚀 ~ thumb', thumb);
-				console.log('🚀 ~ artist', artist);
-				console.log('🚀 ~ baseTitle', baseTitle);
-				console.log('🚀 ~ remixLink', remixLink);
-				console.log('🚀 ~ socialMedia', socialMedia);
-				console.log(
-					'🚀 ~ socialMediaLink',
-					socialMediaLink
-				);
+				// console.log('hypeMachineData', hypeMachineData);
+				// console.log("$('*')", $('*'));
 			});
+			if (jsonOj.length > 0) {
+				res.setHeader('Content-Type', 'application/json');
+				res.status(200);
+				// res.end({ jsonOj });
+				res.json(jsonOj);
+				// res.send({ hypeMachineData });
+			}
+		} else {
+			res.send($.html());
+			res.status(200).end();
 		}
-		res.send($.html());
 	});
 });
 
