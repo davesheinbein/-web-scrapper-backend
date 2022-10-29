@@ -63,26 +63,42 @@ app.get('/scrape', function (req, res) {
 					value: $(el).find('.thumb').attr('href'),
 					id: idx,
 				});
-				$(el)
-					.find('.track_name')
-					.each((idx, elm) => {
-						artist.push({
-							value: $(elm).find('.artist').text(),
-							id: idx,
-						});
-						$(elm)
-							.find('.track')
-							.each((idx, elme) => {
-								baseTitle.push({
-									value: $(elme).find('.base-title').text(),
-									id: idx,
-								});
-								remixLink.push({
-									value: $(elme).find('.remix-link').text(),
-									id: idx,
-								});
-							});
-					});
+				artist.push({
+					value: $(el).find('.track_name > .artist').text(),
+					id: idx,
+				});
+				baseTitle.push({
+					value: $(el)
+						.find('.track_name > .track .base-title')
+						.text(),
+					id: idx,
+				});
+				remixLink.push({
+					value: $(el)
+						.find('.track_name > .track .remix-link')
+						.text(),
+					id: idx,
+				});
+				// $(el)
+				// 	.find('.track_name')
+				// 	.each((idx, elm) => {
+				// 		// artist.push({
+				// 		// 	value: $(elm).find('.artist').text(),
+				// 		// 	id: idx,
+				// 		// });
+				// 		$(elm)
+				// 			.find('.track')
+				// 			.each((idx, elme) => {
+				// 				// baseTitle.push({
+				// 				// 	value: $(elme).find('.base-title').text(),
+				// 				// 	id: idx,
+				// 				// });
+				// 				// remixLink.push({
+				// 				// 	value: $(elme).find('.remix-link').text(),
+				// 				// 	id: idx,
+				// 				// });
+				// 			});
+				// 	});
 				$(el)
 					.find('.meta')
 					.each((idx, elmen) => {
@@ -91,15 +107,18 @@ app.get('/scrape', function (req, res) {
 							// id: idx,
 						});
 						socialMediaLink.push({
-								// // value: $(elmen)
-								// .find('.download > a')
-								.attr('href'),
+							// // value: $(elmen)
+							// .find('.download > a')
+							// .attr('href'),
 							// id: idx,
 						});
 					});
 				// console.log('hypeMachineData', hypeMachineData);
 				// console.log("$('*')", $('*'));
 			});
+			console.log('🚀 ~ artist', artist);
+			console.log('🚀 ~ baseTitle', baseTitle);
+			console.log('🚀 ~ remixLink', remixLink);
 			if (jsonOj.length > 0) {
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200);
