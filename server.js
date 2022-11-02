@@ -38,21 +38,6 @@ app.get('/scrape', function (req, res) {
 				},
 			];
 
-			let hypeMachineData = {
-				html: $.html(),
-				rank,
-				thumb,
-				artist,
-				baseTitle,
-				remixLink,
-				socialMedia,
-				socialMediaLink,
-				headerLogo,
-			};
-
-			let jsonObj = JSON.stringify(hypeMachineData);
-			// console.log('🚀 ~ jsonObj AAA', jsonObj);
-
 			$('.section-player').each((idx, el) => {
 				rank.push({
 					value: $(el).find('.rank').text(),
@@ -89,7 +74,23 @@ app.get('/scrape', function (req, res) {
 					id: idx,
 				});
 			});
-			if (jsonObj.length > 0) {
+
+			let hypeMachineData = {
+				html: $.html(),
+				rank,
+				thumb,
+				artist,
+				baseTitle,
+				remixLink,
+				socialMedia,
+				socialMediaLink,
+				headerLogo,
+			};
+
+			let jsonObj = JSON.stringify(hypeMachineData);
+			console.log('🚀 ~ jsonObj AAA', jsonObj);
+
+			if (socialMediaLink.length >= 20) {
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200);
 				// res.end({ jsonObj });
