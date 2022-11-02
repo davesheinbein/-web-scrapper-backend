@@ -20,54 +20,57 @@ app.get('/scrape', function (req, res) {
 			$ = cheerio.load(html);
 		}
 		if (!!exampleUrl) {
-			// console.log('Using sample Url');
-			// console.log('🚀 ~ $.html', $.html);
-			let rank = [];
-			let thumb = [];
-			let artist = [];
-			let baseTitle = [];
-			let remixLink = [];
-			let socialMedia = [];
-			let socialMediaLink = [];
-			let headerLogo = [
-				{
-					title: $('#header')
-						.find('.logo-txt')
-						.attr('title'),
-					href: $('#header').find('.logo-txt').attr('href'),
-				},
-			];
+			let data = {
+				html: $.html(),
+				rank: [],
+				thumb: [],
+				artist: [],
+				baseTitle: [],
+				remixLink: [],
+				socialMedia: [],
+				socialMediaLink: [],
+				headerLogo: [
+					{
+						title: $('#header')
+							.find('.logo-txt')
+							.attr('title'),
+						href: $('#header')
+							.find('.logo-txt')
+							.attr('href'),
+					},
+				],
+			};
 
 			$('.section-player').each((idx, el) => {
-				rank.push({
+				data.rank.push({
 					value: $(el).find('.rank').text(),
 					id: idx,
 				});
-				thumb.push({
+				data.thumb.push({
 					value: $(el).find('.thumb').attr('href'),
 					id: idx,
 				});
-				artist.push({
+				data.artist.push({
 					value: $(el).find('.track_name > .artist').text(),
 					id: idx,
 				});
-				baseTitle.push({
+				data.baseTitle.push({
 					value: $(el)
 						.find('.track_name > .track .base-title')
 						.text(),
 					id: idx,
 				});
-				remixLink.push({
+				data.remixLink.push({
 					value: $(el)
 						.find('.track_name > .track .remix-link')
 						.text(),
 					id: idx,
 				});
-				socialMedia.push({
+				data.socialMedia.push({
 					value: $(el).find('.meta > .download > a').text(),
 					id: idx,
 				});
-				socialMediaLink.push({
+				data.socialMediaLink.push({
 					value: $(el)
 						.find('.meta > .download > a')
 						.attr('href'),
@@ -75,22 +78,19 @@ app.get('/scrape', function (req, res) {
 				});
 			});
 
-			let hypeMachineData = {
-				html: $.html(),
-				rank,
-				thumb,
-				artist,
-				baseTitle,
-				remixLink,
-				socialMedia,
-				socialMediaLink,
-				headerLogo,
-			};
+			console.log('🚀 ~ data.rank', data.rank);
+			console.log(
+				'🚀 ~ data.socialMediaLink',
+				data.socialMediaLink
+			);
 
-			let jsonObj = JSON.stringify(hypeMachineData);
-			console.log('🚀 ~ jsonObj AAA', jsonObj);
+			let jsonObj = JSON.stringify(data);
 
-			if (socialMediaLink.length >= 20) {
+			if (
+				!!data &&
+				!!data.socialMediaLink &&
+				data.socialMediaLink.length >= 20
+			) {
 				res.setHeader('Content-Type', 'application/json');
 				res.status(200);
 				// res.end({ jsonObj });
