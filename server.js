@@ -21,7 +21,7 @@ app.get('/scrape', function (req, res) {
 		}
 		if (!!exampleUrl) {
 			let data = {
-				html: [],
+				html: [$.html()],
 				rank: [],
 				thumb: [],
 				artist: [],
@@ -76,23 +76,22 @@ app.get('/scrape', function (req, res) {
 						.attr('href'),
 					id: idx,
 				});
+				let jsonObj = JSON.stringify(data);
+
+				if (data.socialMediaLink.length >= 20) {
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200);
+					// res.end({ jsonObj });
+					res.json(jsonObj);
+					// res.send({ hypeMachineData });
+				}
 			});
-
-			data.html.push($.html());
-
-			let jsonObj = JSON.stringify(data);
-
-			console.log('🚀 ~ data', data);
-			// if (data.socialMediaLink.length >= 20) {
-			console.log('🚀 ~ data', data);
-			res.setHeader('Content-Type', 'application/json');
-			res.status(200);
-			// res.end({ jsonObj });
-			res.json(jsonObj);
-			// res.send({ hypeMachineData });
-			// }
 		} else {
-			res.send($.html());
+			let data = {
+				html: $.html(),
+			};
+			let jsonObj = JSON.stringify(data);
+			res.send(jsonObj);
 			res.status(200).end();
 		}
 	});
