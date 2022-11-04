@@ -1,6 +1,7 @@
 const express = require('express');
 const request = require('request');
 const cheerio = require('cheerio');
+const timeout = require('connect-timeout');
 const app = express();
 const cors = require('cors');
 const port = 8081;
@@ -24,6 +25,7 @@ app.get('/scrape', function (req, res) {
 				html: [$.html()],
 				rank: [],
 				thumb: [],
+				thumbnail: [],
 				artist: [],
 				baseTitle: [],
 				remixLink: [],
@@ -48,6 +50,14 @@ app.get('/scrape', function (req, res) {
 				});
 				data.thumb.push({
 					value: $(el).find('.thumb').attr('href'),
+					id: idx,
+				});
+				data.thumbnail.push({
+					value: $(el)
+						.find('.thumb')
+						.attr('style')
+						.match(/\((.*?)\)/)[1]
+						.replace(/('|")/g, ''),
 					id: idx,
 				});
 				data.artist.push({
@@ -81,9 +91,7 @@ app.get('/scrape', function (req, res) {
 				if (data.socialMediaLink.length >= 20) {
 					res.setHeader('Content-Type', 'application/json');
 					res.status(200);
-					// res.end({ jsonObj });
 					res.json(jsonObj);
-					// res.send({ hypeMachineData });
 				}
 			});
 		} else {
@@ -97,6 +105,12 @@ app.get('/scrape', function (req, res) {
 	});
 });
 
+function haltOnTimedout(req, res, next) {
+	if (!req.timedout) next();
+}
+
+app.use(timeout(60000));
+app.use(haltOnTimedout);
+
 app.listen(process.env.PORT || port || '8081');
-// console.log(`listening on port ${port}`);
 exports = module.exports = app;
