@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
@@ -18,9 +18,11 @@
   },
   "homepage": "https://github.com/davesheinbein/web-scrapper-backend#readme",
   "dependencies": {
+    "axios": "^1.1.3",
     "cheerio": "^1.0.0-rc.12",
     "connect-timeout": "^1.9.0",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "node": "^19.0.0",
     "request": "^2.88.2"
