@@ -1,6 +1,7 @@
 const express = require('express');
 const request = require('request');
 const cheerio = require('cheerio');
+const axios = require('axios');
 const timeout = require('connect-timeout');
 const app = express();
 const cors = require('cors');
@@ -41,30 +42,20 @@ app.get(
 	}
 );
 
-app.get(
-	'/scrape',
-	(
-		// req: Request<P, ResBody, ReqBody, ReqQuery, Locals>,
-		// res: Response<ResBody, Locals>
-		req,
-		res
-	) => {
-		url = req.query.url;
-		var $;
-		const exampleUrl = url === 'https://hypem.com/popular';
-		request(url, function (error, response, html) {
-			if (!error) {
-				$ = cheerio.load(html);
-			}
+app.get('/scrape', (req, res) => {
+	// url = req.query.url;
+	url = 'https://hypem.com/popular';
+	var $;
+	const exampleUrl = url === 'https://hypem.com/popular';
+
+	axios
+		.get(url)
+		.then((response) => {
+			const html = response.data;
+			const $ = cheerio.load(html);
+
 			if (!!exampleUrl) {
-				data.html.push($.html());
-				data.headerLogo.push({
-					title: $('#header')
-						.find('.logo-txt')
-						.attr('title'),
-					href: $('#header').find('.logo-txt').attr('href'),
-				});
-				$('.section-player').each((idx, el) => {
+				$('.section-player', html).each((idx, el) => {
 					data.rank.push({
 						value: $(el).find('.rank').text(),
 						id: idx,
@@ -111,6 +102,16 @@ app.get(
 							.attr('href'),
 						id: idx,
 					});
+					data.headerLogo.push({
+						title: $('#header')
+							.find('.logo-txt')
+							.attr('title'),
+						href: $('#header')
+							.find('.logo-txt')
+							.attr('href'),
+					});
+					data.html.push(html);
+
 					let jsonObj = JSON.stringify(data);
 
 					if (data.socialMediaLink.length >= 20) {
@@ -128,9 +129,9 @@ app.get(
 				res.send(jsonObj);
 				res.status(200).end();
 			}
-		});
-	}
-);
+		})
+		.catch((err) => console.log('Error:', err));
+});
 
 function haltOnTimedout(req, res, next) {
 	if (!req.timedout) next();
