@@ -30,17 +30,9 @@ let customData = {
 	html: [],
 };
 
-app.get(
-	'/',
-	(
-		// req: Request<P, ResBody, ReqBody, ReqQuery, Locals>,
-		// res: Response<ResBody, Locals>
-		req,
-		res
-	) => {
-		res.json('Hello please navigate to /scrape');
-	}
-);
+app.get('/', (req, res) => {
+	res.json('Hello please navigate to /scrape');
+});
 
 app.get('/scrape', (req, res) => {
 	// url = req.query.url;
@@ -55,13 +47,14 @@ app.get('/scrape', (req, res) => {
 			const $ = cheerio.load(html);
 
 			if (!!exampleUrl) {
+				const base = 'https://hypem.com/';
 				$('.section-player', html).each((idx, el) => {
 					data.rank.push({
 						value: $(el).find('.rank').text(),
 						id: idx,
 					});
 					data.thumb.push({
-						value: $(el).find('.thumb').attr('href'),
+						value: base + $(el).find('.thumb').attr('href'),
 						id: idx,
 					});
 					data.thumbnail.push({
@@ -97,9 +90,11 @@ app.get('/scrape', (req, res) => {
 						id: idx,
 					});
 					data.socialMediaLink.push({
-						value: $(el)
-							.find('.meta > .download > a')
-							.attr('href'),
+						value:
+							base +
+							$(el)
+								.find('.meta > .download > a')
+								.attr('href'),
 						id: idx,
 					});
 					data.headerLogo.push({
@@ -111,18 +106,14 @@ app.get('/scrape', (req, res) => {
 							.attr('href'),
 					});
 					data.html.push(html);
-
-					let jsonObj = JSON.stringify(data);
-
-					if (data.socialMediaLink.length >= 20) {
-						res.setHeader(
-							'Content-Type',
-							'application/json'
-						);
-						res.status(200);
-						res.json(jsonObj);
-					}
 				});
+				let jsonObj = JSON.stringify(data);
+
+				if (data.socialMediaLink.length >= 20) {
+					res.setHeader('Content-Type', 'application/json');
+					res.status(200);
+					res.json(jsonObj);
+				}
 			} else {
 				customData.push({ html: $.html() });
 				let jsonObj = JSON.stringify(data);
@@ -133,12 +124,12 @@ app.get('/scrape', (req, res) => {
 		.catch((err) => console.log('Error:', err));
 });
 
-function haltOnTimedout(req, res, next) {
-	if (!req.timedout) next();
-}
+// function haltOnTimedout(req, res, next) {
+// 	if (!req.timedout) next();
+// }
 
-app.use(timeout(60000));
-app.use(haltOnTimedout);
+// app.use(timeout(60000));
+// app.use(haltOnTimedout);
 
 app.listen(process.env.PORT || port || '8081');
 exports = module.exports = app;
